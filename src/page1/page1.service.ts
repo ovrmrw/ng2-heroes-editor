@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store, Dispatcher, Action, EditHero, AddHero, DeleteHero } from '../store';
 import { Hero } from '../types';
 
+
 @Injectable()
 export class Page1Service {
 

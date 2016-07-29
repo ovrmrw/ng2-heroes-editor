@@ -35,7 +35,7 @@ export class Store {
       });
   }
 
-  private get returner$() { return this.stateSubject$.map(state => lodash.cloneDeep(state)); }
+  private get returner$() { return this.stateSubject$.asObservable().map(state => lodash.cloneDeep(state)); }
 
   get state$() { return this.returner$; }
   get heroes$() { return this.returner$.map(state => state.heroes); }
@@ -43,19 +43,20 @@ export class Store {
 
 
 function heroReducer(initHeroes: Hero[], dispatcher$: Observable<Action>): Observable<Hero[]> {
-  return dispatcher$.scan((heroes: Hero[], action: Action) => {
-    if (action instanceof EditHero) {
-      const editedHero = action.hero;
-      heroes = lodash.uniqBy([editedHero, ...heroes], 'id');
-    } else if (action instanceof AddHero) {
-      const newHero = action.hero;
-      heroes = lodash.uniqBy([newHero, ...heroes], 'id');
-    } else if (action instanceof DeleteHero) {
-      const deleteId = action.id;
-      heroes = lodash.reject(heroes, { id: deleteId });
-    }
-    return lodash.orderBy(heroes, ['id'], ['asc']);;
-  }, initHeroes);
+  return dispatcher$
+    .scan((heroes: Hero[], action: Action) => {
+      if (action instanceof EditHero) {
+        const editedHero = action.hero;
+        heroes = lodash.uniqBy([editedHero, ...heroes], 'id');
+      } else if (action instanceof AddHero) {
+        const newHero = action.hero;
+        heroes = lodash.uniqBy([newHero, ...heroes], 'id');
+      } else if (action instanceof DeleteHero) {
+        const deleteId = action.id;
+        heroes = lodash.reject(heroes, { id: deleteId });
+      }
+      return lodash.orderBy(heroes, ['id'], ['asc']);;
+    }, initHeroes);
 }
 
 

@@ -14,13 +14,18 @@ export class Page2Service {
 
 
   save(hero: Hero, isAdding: boolean) {
-    if (isAdding) {
-      this.dispatcher$.next(new AddHero(hero));
+    if (typeof hero.id === 'number' && typeof hero.name === 'string') {
+      if (isAdding) {
+        this.dispatcher$.next(new AddHero(hero));
+      } else {
+        this.dispatcher$.next(new EditHero(hero));
+      }
     } else {
-      this.dispatcher$.next(new EditHero(hero));
+      console.error(hero);
+      console.error('type of hero is not allowed.');
     }
   }
 
-  get heroes$() { return this.store.heroes$.debounceTime(1000); }
+  get heroes$() { return this.store.heroes$; }
 
 }

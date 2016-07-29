@@ -11,7 +11,7 @@ import { Hero } from '../types';
   template: `
     <div>
       <ul>
-        <li *ngFor="let hero of heroes | async:onError">
+        <li *ngFor="let hero of heroes | async">
           <div>
             <button class="btn btn-secondary" (click)="editHero(hero)">Edit</button>
             <button class="btn btn-warning" (click)="deleteHero(hero)">Delete</button>
@@ -35,9 +35,7 @@ export class Page1Component implements OnInit {
     public cd: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    // this.subscribeHeroes();
-  }
+  ngOnInit() { }
 
 
   addHero() {
@@ -52,16 +50,6 @@ export class Page1Component implements OnInit {
     this.service.deleteHero(hero);
   }
 
-  // subscribeHeroes() {
-  //   this.service.heroes$.do(heroes => this.heroes = heroes).subscribe(() => this.cd.markForCheck());
-  // }
-
-  // heroes: Hero[];
-
   get heroes() { return this.service.heroes$; }
-
-  onError(err) {
-    console.error(err);
-  }
 
 }
