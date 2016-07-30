@@ -2,12 +2,10 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestro
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import lodash from 'lodash';
-import { FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, REACTIVE_FORM_DIRECTIVES, Validators } from '@angular/forms';
 
 import { Page2Service } from './page2.service';
 import { Hero } from '../types';
 
-import 'rxjs/add/operator/toPromise';
 
 @Component({
   moduleId: module.id,
@@ -15,22 +13,41 @@ import 'rxjs/add/operator/toPromise';
   template: `
     <h3>{{modeName}}</h3>
 
-    <div *ngIf="!!hero">
-      <form #form="ngForm">
-        <div *ngIf="isAdding">
-          <input type="number" [(ngModel)]="hero.id" name="id">
+    <form *ngIf="hero" (ngSubmit)="onSubmit()" #heroForm="ngForm">
+      <div class="form-group row">
+        <label for="id" class="col-xs-1 col-form-label">Id: </label>
+        <div class="col-xs-11">
+          <input class="form-control" type="number" id="id" [(ngModel)]="hero.id" name="id" #id="ngModel" required [disabled]="!isAdding" #spy>
+          <div [hidden]="id.valid || id.pristine" class="alert alert-danger">
+            Id is required
+          </div>       
+          <pre>className: {{spy.className}}</pre>   
         </div>
-        <div *ngIf="!isAdding">
-          <input type="number" [(ngModel)]="hero.id" name="id" disabled>
+      </div>
+      <div class="form-group row">
+        <label for="name" class="col-xs-1 col-form-label">Name: </label>
+        <div class="col-xs-11">
+          <input class="form-control" type="text" id="name" [(ngModel)]="hero.name" name="name" #name="ngModel" required #spy>
+          <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+            Name is required
+          </div>
+          <pre>className: {{spy.className}}</pre>          
         </div>
-        <input type="text" [(ngModel)]="hero.name" name="name">
-      </form>
-    </div>
-
-    <button (click)="save()" >Save</button>
+      </div>
+      <pre>{{hero | json}}</pre>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!heroForm.form.valid">Submit</button>
+    </form>    
   `,
-  directives: [REACTIVE_FORM_DIRECTIVES],
-  providers: [Page2Service, FormBuilder],
+  styles: [`
+    .ng-valid[required] {
+      border-left: 10px solid #42A948; /* green */
+    }
+
+    .ng-invalid {
+      border-left: 10px solid #a94442; /* red */
+    }
+  `],
+  providers: [Page2Service],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Page2Component implements OnInit {
@@ -44,15 +61,12 @@ export class Page2Component implements OnInit {
     public service: Page2Service,
     public route: ActivatedRoute,
     public router: Router,
-    public cd: ChangeDetectorRef,
-    public formBuilder: FormBuilder
+    public cd: ChangeDetectorRef
   ) {
     this.disSub = this.route.params.subscribe(params => {
-      console.log(params);
       if (params['id']) {
         const id = +params['id'];
-        this.disSub = this.service.heroes$.subscribe(heroes => {
-          console.log(heroes)
+        this.service.heroes$.take(1).toPromise().then(heroes => {
           const selectedHero = heroes.find(hero => hero.id === id);
           if (selectedHero) {
             this.hero = selectedHero;
@@ -63,9 +77,9 @@ export class Page2Component implements OnInit {
         });
       } else {
         this.hero = new Hero();
-        this.isAdding = true;
+        this.isAdding = true;        
       }
-    })
+    });
   }
 
   ngOnInit() { }
@@ -76,10 +90,8 @@ export class Page2Component implements OnInit {
     }
   }
 
-  save() {
-    console.log(this.hero);
-    // console.log(this.registerForm.value.hero);
-    // const hero: Hero = this.registerForm.value.hero;
+
+  onSubmit() {
     this.service.save(this.hero, this.isAdding);
     this.router.navigate(['/page1']);
   }
@@ -91,12 +103,5 @@ export class Page2Component implements OnInit {
       return 'Editing Mode';
     }
   }
-
-  registerForm = new FormGroup({
-    hero: new FormGroup({
-      id: new FormControl('', [Validators.required]),
-      name: new FormControl('', [Validators.required]),
-    })
-  });
 
 }

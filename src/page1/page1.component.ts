@@ -9,19 +9,19 @@ import { Hero } from '../types';
   moduleId: module.id,
   selector: 'my-page1',
   template: `
+    <h3>Hero List</h3>
+    
     <div>
-      <ul>
-        <li *ngFor="let hero of heroes | async">
-          <div>
-            <button class="btn btn-secondary" (click)="editHero(hero)">Edit</button>
-            <button class="btn btn-warning" (click)="deleteHero(hero)">Delete</button>
-            id: {{hero.id}} / name: {{hero.name}}
-          </div>
+      <ul class="list-group">
+        <li *ngFor="let hero of heroes | async" class="list-group-item">
+          <button class="btn btn-outline-primary btn-sm" (click)="editHero(hero)">Edit</button>
+          <button class="btn btn-outline-warning btn-sm" (click)="deleteHero(hero)">Delete</button>
+          <span>id: {{hero.id}} / name: {{hero.name}}</span>
         </li>
       </ul>
     </div>
     <div>
-      <button class="btn btn-primary" (click)="addHero()">Add</button>
+      <button class="btn btn-outline-primary" (click)="addHero()">Add Hero</button>
     </div>
   `,
   providers: [Page1Service],

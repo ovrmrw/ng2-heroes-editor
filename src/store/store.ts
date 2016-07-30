@@ -4,7 +4,7 @@ import lodash from 'lodash';
 
 import { Hero } from '../types';
 import { Action, EditHero, AddHero, DeleteHero } from './actions';
-
+import { logger } from '../helper';
 
 interface AppState {
   heroes: Hero[];
@@ -17,7 +17,9 @@ export class Dispatcher<T> extends Subject<T> { }
 export class Store {
   private stateSubject$: Subject<AppState>;
 
-  constructor(dispatcher$: Dispatcher<Action>) {
+  constructor(
+    dispatcher$: Dispatcher<Action>
+  ) {
     const initState: AppState = {
       heroes: initialHeroes
     };
@@ -35,6 +37,7 @@ export class Store {
       });
   }
 
+
   private get returner$() { return this.stateSubject$.asObservable().map(state => lodash.cloneDeep(state)); }
 
   get state$() { return this.returner$; }
@@ -45,6 +48,7 @@ export class Store {
 function heroReducer(initHeroes: Hero[], dispatcher$: Observable<Action>): Observable<Hero[]> {
   return dispatcher$
     .scan((heroes: Hero[], action: Action) => {
+      const oldHeroes = heroes;
       if (action instanceof EditHero) {
         const editedHero = action.hero;
         heroes = lodash.uniqBy([editedHero, ...heroes], 'id');
@@ -55,6 +59,7 @@ function heroReducer(initHeroes: Hero[], dispatcher$: Observable<Action>): Obser
         const deleteId = action.id;
         heroes = lodash.reject(heroes, { id: deleteId });
       }
+      logger('Store - heroReducer', oldHeroes, heroes);
       return lodash.orderBy(heroes, ['id'], ['asc']);;
     }, initHeroes);
 }

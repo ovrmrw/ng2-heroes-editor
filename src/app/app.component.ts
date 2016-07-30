@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 
-// import { HeroService } from '../webapi/hero.service';
-// import './rxjs-extensions';
 
 @Component({
   moduleId: module.id,
   selector: 'my-app',
 
   template: `
-    <h1>{{title}}</h1>
-    <nav>
-      <a class="btn btn-primary" [routerLink]="['/page1']" routerLinkActive="active">HeroList</a>
-      <a class="btn btn-primary" [routerLink]="['/page2']" routerLinkActive="active">Add/Edit</a>
+    <h2>{{title}}</h2>
+    <nav class="navbar navbar-light bg-faded">
+      <ul class="nav navbar-nav">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/page1']">HeroList</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link "[routerLink]="['/page2']">Add/Edit</a>
+        </li>
+      </ul>
     </nav>
     <router-outlet></router-outlet>
   `,
-  // styleUrls: ['app.component.css'],
   directives: [ROUTER_DIRECTIVES],
-  // providers: [
-  //   HeroService,
-  // ]
 })
 export class AppComponent {
-  title = 'Tour of Heroes';
+  title = 'Heroes Editor';
 }
 
 

@@ -1,8 +1,5 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 
-// import { DashboardComponent } from '../dashboard/dashboard.component';
-// import { HeroesComponent } from '../hero-list/heroes.component';
-// import { HeroDetailComponent } from '../hero-detail/hero-detail.component';
 import { Page1Component } from '../page1/page1.component';
 import { Page2Component } from '../page2/page2.component';
 

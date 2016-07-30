@@ -9,7 +9,6 @@ import { asyncPower, fakeAsyncPower, setTimeoutPromise, elements, elementText } 
 ////////////////////////////////////////////////////////////////////////
 // modules
 import { AppComponent } from '../../src/app/app.component';
-import { HeroService } from '../../src/webapi/hero.service';
 import { appRouterProviders } from '../../src/app/app.routes';
 
 import { Directive } from '@angular/core';
@@ -41,7 +40,6 @@ describe('TEST: App Component', () => {
       { provide: APP_BASE_HREF, useValue: '/' }, // must be second
       { provide: ActivatedRoute, useClass: Mock },
       { provide: Router, useClass: MockRouter },
-      { provide: HeroService, useClass: Mock }
     ]);
   });
 
@@ -60,12 +58,10 @@ describe('TEST: App Component', () => {
     if (fixture) {
       const el = fixture.nativeElement as HTMLElement;
       const component = fixture.componentRef.instance;
-      assert(elementText(el, 'nav a', 0) === 'Dashboard');
-      assert(elementText(el, 'nav a', 1) === 'Heroes');
-      assert(component.title === 'Tour of Heroes');
-      assert(elementText(el, 'h1') === '');
+      assert(component.title === 'Heroes Editor');
+      assert(elementText(el, 'h2') === '');
       fixture.detectChanges();
-      assert(elementText(el, 'h1') === 'Tour of Heroes');
+      assert(elementText(el, 'h2') === 'Heroes Editor');
     }
   }));
 

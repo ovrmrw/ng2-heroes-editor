@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, Dispatcher, Action, EditHero, AddHero, DeleteHero } from '../store';
 import { Hero } from '../types';
-
+import { logger } from '../helper';
 
 @Injectable()
 export class Page2Service {
@@ -20,9 +20,10 @@ export class Page2Service {
       } else {
         this.dispatcher$.next(new EditHero(hero));
       }
+      logger('Page2Service - save', 'Added/Edited Hero', hero);
     } else {
       console.error(hero);
-      console.error('type of hero is not allowed.');
+      console.error('type of hero is not allowed to save.');
     }
   }
 

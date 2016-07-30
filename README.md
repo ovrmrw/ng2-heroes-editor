@@ -1,3 +1,3 @@
-# experimental-20160728
+# ng2-heroes-editor
 
 ---
