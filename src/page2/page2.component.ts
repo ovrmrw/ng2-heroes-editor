@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import lodash from 'lodash';
@@ -15,8 +15,8 @@ import { Hero } from '../types';
 
     <form *ngIf="hero" (ngSubmit)="onSubmit()" #heroForm="ngForm">
       <div class="form-group row">
-        <label for="id" class="col-xs-1 col-form-label">Id: </label>
-        <div class="col-xs-11">
+        <label for="id" class="col-xs-2 col-form-label">Id: </label>
+        <div class="col-xs-10">
           <input class="form-control" type="number" id="id" [(ngModel)]="hero.id" name="id" #id="ngModel" required [disabled]="!isAdding" #spy>
           <div [hidden]="id.valid || id.pristine" class="alert alert-danger">
             Id is required
@@ -25,8 +25,8 @@ import { Hero } from '../types';
         </div>
       </div>
       <div class="form-group row">
-        <label for="name" class="col-xs-1 col-form-label">Name: </label>
-        <div class="col-xs-11">
+        <label for="name" class="col-xs-2 col-form-label">Name: </label>
+        <div class="col-xs-10">
           <input class="form-control" type="text" id="name" [(ngModel)]="hero.name" name="name" #name="ngModel" required #spy>
           <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
             Name is required
@@ -36,6 +36,7 @@ import { Hero } from '../types';
       </div>
       <pre>{{hero | json}}</pre>
       <button type="submit" class="btn btn-outline-primary" [disabled]="!heroForm.form.valid">Submit</button>
+      <pre>heroForm.form.valid: {{heroForm.form.valid | json}}</pre>
     </form>    
   `,
   styles: [`
@@ -50,7 +51,7 @@ import { Hero } from '../types';
   providers: [Page2Service],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Page2Component implements OnInit {
+export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
   hero: Hero;
   isAdding: boolean = false;
   private _disSubs: Subscription[] = []; // disposable subscriptions
@@ -61,7 +62,8 @@ export class Page2Component implements OnInit {
     public service: Page2Service,
     public route: ActivatedRoute,
     public router: Router,
-    public cd: ChangeDetectorRef
+    public cd: ChangeDetectorRef,
+    public el: ElementRef
   ) {
     this.disSub = this.route.params.subscribe(params => {
       if (params['id']) {
@@ -77,12 +79,20 @@ export class Page2Component implements OnInit {
         });
       } else {
         this.hero = new Hero();
-        this.isAdding = true;        
+        this.isAdding = true;
       }
     });
   }
 
   ngOnInit() { }
+
+  ngAfterViewInit() {
+    if (this.isAdding) {
+      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('#id')).focus();
+    } else {
+      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('#name')).focus();
+    }
+  }
 
   ngOnDestroy() {
     if (this.disSubs.length > 0) {

@@ -15,7 +15,8 @@ if (process.env.ENV === 'production') {
 bootstrap(AppComponent, [
   appRouterProviders,
   { provide: Dispatcher, useValue: new Dispatcher<Action>() },
-  { provide: Store, useFactory: (dispatcher) => new Store(dispatcher), deps: [Dispatcher] },
+  // { provide: Store, useFactory: (dispatcher) => new Store(dispatcher), deps: [Dispatcher] },
+  Store,
   disableDeprecatedForms(),
   provideForms()
 ]);
