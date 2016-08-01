@@ -60,7 +60,7 @@ function heroReducer(initHeroes: Hero[], dispatcher$: Observable<Action>): Obser
         heroes = lodash.reject(heroes, { id: deleteId });
       }
       logger('Store - heroReducer', oldHeroes, heroes);
-      return lodash.orderBy(heroes, ['id'], ['asc']);;
+      return lodash.orderBy(heroes, ['id'], ['asc']);
     }, initHeroes);
 }
 
