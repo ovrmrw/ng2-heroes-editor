@@ -65,37 +65,59 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     public cd: ChangeDetectorRef,
     public el: ElementRef
   ) {
-    this.disSub = this.route.params.subscribe(params => {
-      if (params['id']) { // Editing Mode
-        const id: number = +params['id'];
-        this.service.heroes$.take(1).toPromise().then(heroes => {
-          const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
-          if (selectedHero) {
-            this.hero = selectedHero;
-          } else {
-            alert('no hero for the explicit id.');
-            this.router.navigate(['/page1']);
-          }
-        });
-      } else { // Adding Mode
-        this.service.heroes$.take(1).toPromise().then(heroes => {
-          const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
-          this.hero = new Hero();
-          this.hero.id = newId;
-          this.isAdding = true;
-        });
-      }
-    });
+    /* 個人的な好みの問題でngOnInitにasync/awaitで書き直した。 */
+    // this.disSub = this.route.params.subscribe(params => {
+    //   if (params['id']) { // Editing Mode
+    //     const id: number = +params['id'];
+    //     this.service.heroes$.take(1).toPromise().then(heroes => {
+    //       const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
+    //       if (selectedHero) {
+    //         this.hero = selectedHero;
+    //       } else {
+    //         alert('no hero for the explicit id.');
+    //         this.router.navigate(['/page1']);
+    //       }
+    //     });
+    //   } else { // Adding Mode
+    //     this.service.heroes$.take(1).toPromise().then(heroes => {
+    //       const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
+    //       this.hero = new Hero();
+    //       this.hero.id = newId;
+    //       this.isAdding = true;
+    //     });
+    //   }
+    // });
   }
 
-  ngOnInit() { }
+  async ngOnInit() {
+    const heroes = await this.service.heroes$.take(1).toPromise();
+    const params = this.route.snapshot.params;
+    if (params['id']) { // Editing Mode
+      const id: number = +params['id'];
+      const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
+      if (selectedHero) {
+        this.hero = selectedHero;
+      } else {
+        alert('no hero for the explicit id.');
+        this.router.navigate(['/page1']);
+      }
+    } else { // Adding Mode
+      const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
+      this.hero = new Hero();
+      this.hero.id = newId;
+      this.isAdding = true;
+    }
+    this.cd.markForCheck();
+  }
 
   ngAfterViewInit() {
-    if (this.isAdding) {
-      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#id')).focus();
-    } else {
-      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#name')).focus();
-    }
+    setTimeout(() => {
+      if (this.isAdding) {
+        (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#id')).focus();
+      } else {
+        (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#name')).focus();
+      }
+    }, 0);
   }
 
   ngOnDestroy() {
