@@ -66,10 +66,10 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     public el: ElementRef
   ) {
     this.disSub = this.route.params.subscribe(params => {
-      if (params['id']) {
-        const id = +params['id'];
+      if (params['id']) { // Editing Mode
+        const id: number = +params['id'];
         this.service.heroes$.take(1).toPromise().then(heroes => {
-          const selectedHero = heroes.find(hero => hero.id === id);
+          const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
           if (selectedHero) {
             this.hero = selectedHero;
           } else {
@@ -77,9 +77,13 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
             this.router.navigate(['/page1']);
           }
         });
-      } else {
-        this.hero = new Hero();
-        this.isAdding = true;
+      } else { // Adding Mode
+        this.service.heroes$.take(1).toPromise().then(heroes => {
+          const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
+          this.hero = new Hero();
+          this.hero.id = newId;
+          this.isAdding = true;
+        });
       }
     });
   }
@@ -88,9 +92,9 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.isAdding) {
-      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('#id')).focus();
+      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#id')).focus();
     } else {
-      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('#name')).focus();
+      (<HTMLInputElement>(<HTMLElement>this.el.nativeElement).querySelector('input#name')).focus();
     }
   }
 

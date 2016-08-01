@@ -4,6 +4,7 @@ import { Store, Dispatcher, Action, EditHero, AddHero, DeleteHero } from '../sto
 import { Hero } from '../types';
 import { logger } from '../helper';
 
+
 @Injectable()
 export class Page2Service {
 
@@ -15,7 +16,7 @@ export class Page2Service {
 
   save(hero: Hero, isAdding: boolean) {
     if (typeof hero.id === 'number' && typeof hero.name === 'string') {
-      if (isAdding) {
+      if (isAdding) {        
         this.dispatcher$.next(new AddHero(hero));
       } else {
         this.dispatcher$.next(new EditHero(hero));
