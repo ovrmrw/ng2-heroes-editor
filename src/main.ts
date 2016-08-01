@@ -5,7 +5,7 @@ import { disableDeprecatedForms, provideForms } from '@angular/forms';
 import { AppComponent } from './app/app.component';
 import { appRouterProviders } from './app/app.routes';
 
-import { Store, Dispatcher, Action } from './store';
+import { Store, Dispatcher } from './store';
 
 
 if (process.env.ENV === 'production') {
@@ -14,8 +14,9 @@ if (process.env.ENV === 'production') {
 
 bootstrap(AppComponent, [
   appRouterProviders,
-  { provide: Dispatcher, useValue: new Dispatcher<Action>() },
+  // { provide: Dispatcher, useValue: new Dispatcher<Action>() },
   // { provide: Store, useFactory: (dispatcher) => new Store(dispatcher), deps: [Dispatcher] },
+  Dispatcher,
   Store,
   disableDeprecatedForms(),
   provideForms()

@@ -10,6 +10,8 @@ interface AppState {
   heroes: Hero[];
 }
 
+
+@Injectable()
 export class Dispatcher<T> extends Subject<T> { }
 
 
