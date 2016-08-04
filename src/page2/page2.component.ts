@@ -39,15 +39,6 @@ import { Hero } from '../types';
       <pre>heroForm.form.valid: {{heroForm.form.valid | json}}</pre>
     </form>    
   `,
-  // styles: [`
-  //   .ng-valid[required] {
-  //     border-left: 10px solid #42A948; /* green */
-  //   }
-
-  //   .ng-invalid {
-  //     border-left: 10px solid #a94442; /* red */
-  //   }
-  // `],
   styleUrls: ['page2.style.scss'],
   providers: [Page2Service],
   changeDetection: ChangeDetectionStrategy.OnPush
