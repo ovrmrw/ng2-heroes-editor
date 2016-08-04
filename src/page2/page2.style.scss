@@ -1,0 +1,9 @@
+$border-left-px: 10px;
+
+.ng-valid[required] {
+  border-left: $border-left-px solid #42A948; /* green */
+}
+
+.ng-invalid {
+  border-left: $border-left-px solid #a94442; /* red */
+}

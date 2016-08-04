@@ -39,15 +39,16 @@ import { Hero } from '../types';
       <pre>heroForm.form.valid: {{heroForm.form.valid | json}}</pre>
     </form>    
   `,
-  styles: [`
-    .ng-valid[required] {
-      border-left: 10px solid #42A948; /* green */
-    }
+  // styles: [`
+  //   .ng-valid[required] {
+  //     border-left: 10px solid #42A948; /* green */
+  //   }
 
-    .ng-invalid {
-      border-left: 10px solid #a94442; /* red */
-    }
-  `],
+  //   .ng-invalid {
+  //     border-left: 10px solid #a94442; /* red */
+  //   }
+  // `],
+  styleUrls: ['page2.style.scss'],
   providers: [Page2Service],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -65,7 +66,6 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     public cd: ChangeDetectorRef,
     public el: ElementRef
   ) {
-    /* 個人的な好みの問題でngOnInitにasync/awaitで書き直した。 */
     // this.disSub = this.route.params.subscribe(params => {
     //   if (params['id']) { // Editing Mode
     //     const id: number = +params['id'];
@@ -89,25 +89,26 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     // });
   }
 
-  async ngOnInit() {
-    const heroes = await this.service.heroes$.take(1).toPromise();
-    const params = this.route.snapshot.params;
-    if (params['id']) { // Editing Mode
-      const id: number = +params['id'];
-      const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
-      if (selectedHero) {
-        this.hero = selectedHero;
-      } else {
-        alert('no hero for the explicit id.');
-        this.router.navigate(['/page1']);
+  ngOnInit() {
+    this.disSub = this.route.params.subscribe(async (params) => {
+      const heroes: Hero[] = await this.service.heroes$.take(1).toPromise();
+      if (params['id']) { // Editing Mode
+        const id: number = +params['id'];
+        const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
+        if (selectedHero) {
+          this.hero = selectedHero;
+        } else {
+          alert('no hero for the explicit id.');
+          this.router.navigate(['/page1']);
+        }
+      } else { // Adding Mode        
+        const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
+        this.hero = new Hero();
+        this.hero.id = newId;
+        this.isAdding = true;
       }
-    } else { // Adding Mode
-      const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
-      this.hero = new Hero();
-      this.hero.id = newId;
-      this.isAdding = true;
-    }
-    this.cd.markForCheck();
+      this.cd.markForCheck();
+    });
   }
 
   ngAfterViewInit() {
