@@ -6,6 +6,12 @@
 
 Base Project -> [ovrmrw/ovrmrw-ng2-env-20160725](https://github.com/ovrmrw/ovrmrw-ng2-env-20160725)
 
+||My Environments|
+|:--|:--|
+|OS|Windows 10 64bit|
+|Editor|VSCode (stable)|
+|node --version|v6.3.1|
+
 ### Setup
 ```
 $ npm install
