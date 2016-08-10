@@ -49,7 +49,7 @@ export class Store {
 
 function heroReducer(initHeroes: Hero[], dispatcher$: Observable<Action>): Observable<Hero[]> {
   return dispatcher$
-    .scan((heroes: Hero[], action: Action) => {
+    .scan<Hero[]>((heroes: Hero[], action: Action) => {
       const oldHeroes = heroes;
       if (action instanceof EditHero) {
         const editedHero = action.hero;

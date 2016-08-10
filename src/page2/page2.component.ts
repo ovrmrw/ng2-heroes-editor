@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import lodash from 'lodash';
 
@@ -8,7 +8,7 @@ import { Hero } from '../types';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'my-page2',
   template: `
     <h3>{{modeName}}</h3>
@@ -39,16 +39,14 @@ import { Hero } from '../types';
       <pre>heroForm.form.valid: {{heroForm.form.valid | json}}</pre>
     </form>    
   `,
-  styleUrls: ['page2.style.scss'],
-  providers: [Page2Service],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['page2.style.scss']
 })
 export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
   hero: Hero;
   isAdding: boolean = false;
-  private _disSubs: Subscription[] = []; // disposable subscriptions
-  set disSub(sub: Subscription) { this._disSubs.push(sub); }
-  get disSubs() { return this._disSubs; }
+  // private _disSubs: Subscription[] = []; // disposable subscriptions
+  // set disSub(sub: Subscription) { this._disSubs.push(sub); }
+  // get disSubs() { return this._disSubs; }
 
   constructor(
     public service: Page2Service,
@@ -81,7 +79,7 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.disSub = this.route.params.subscribe(async (params) => {
+    this.route.params.forEach(async (params: Params) => {      
       const heroes: Hero[] = await this.service.heroes$.take(1).toPromise();
       if (params['id']) { // Editing Mode
         const id: number = +params['id'];
@@ -113,9 +111,9 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.disSubs.length > 0) {
-      this.disSubs.forEach(disSub => disSub.unsubscribe());
-    }
+    // if (this.disSubs.length > 0) {
+    //   this.disSubs.forEach(disSub => disSub.unsubscribe());
+    // }
   }
 
 

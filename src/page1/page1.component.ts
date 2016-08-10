@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Page1Service } from './page1.service';
@@ -6,7 +6,7 @@ import { Hero } from '../types';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'my-page1',
   template: `
     <h3>Hero List</h3>
@@ -23,9 +23,7 @@ import { Hero } from '../types';
     <div>
       <button class="btn btn-outline-primary" (click)="addHero()">Add Hero</button>
     </div>
-  `,
-  providers: [Page1Service],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `
 })
 export class Page1Component implements OnInit {
 
