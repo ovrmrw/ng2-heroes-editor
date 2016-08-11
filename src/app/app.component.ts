@@ -24,13 +24,3 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 export class AppComponent {
   title = 'Heroes Editor';
 }
-
-
-/*
-<li class="nav-item" routerLinkActive="active">
-  <a class="nav-link" [routerLink]="['/page1']">HeroList</a>
-</li>
-<li class="nav-item" routerLinkActive="active">
-  <a class="nav-link" [routerLink]="['/page2']">Add/Edit</a>
-</li>
-*/

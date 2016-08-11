@@ -104,11 +104,7 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     }, 0);
   }
 
-  ngOnDestroy() {
-    // if (this.disSubs.length > 0) {
-    //   this.disSubs.forEach(disSub => disSub.unsubscribe());
-    // }
-  }
+  ngOnDestroy() { }
 
 
   onSubmit() {
