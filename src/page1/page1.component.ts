@@ -10,8 +10,7 @@ import { Hero } from '../types';
   // moduleId: module.id,
   selector: 'my-page1',
   template: `
-    <h3>Hero List</h3>
-    
+    <h3>Hero List</h3>    
     <div>
       <ul class="list-group">
         <li *ngFor="let hero of heroes | async" class="list-group-item">
@@ -35,10 +34,10 @@ import { Hero } from '../types';
     trigger('routeAnimation', [
       state('*', style({ transform: 'translateX(0)', opacity: 1 })),
       transition('void => *', [
-        style({ transform: 'translateX(-20%)', opacity: 0 }),
-        animate(100)
+        style({ transform: 'translateX(-30%)', opacity: 0 }),
+        animate(200)
       ]),
-      transition('* => void', animate(100, style({ transform: 'translateX(20%)', opacity: 0 })))
+      transition('* => void', animate(200, style({ transform: 'translateX(30%)', opacity: 0 })))
     ])
   ]
 })

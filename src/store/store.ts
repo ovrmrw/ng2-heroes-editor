@@ -28,7 +28,7 @@ export class Store {
     this.stateSubject$ = new BehaviorSubject(initState);
 
     Observable
-      .zip(
+      .zip<AppState>(
       heroReducer(initState.heroes, dispatcher$),
       (heroes) => {
         return { heroes } as AppState;
