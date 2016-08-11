@@ -95,12 +95,10 @@ describe('TEST: HeroDetail Component', () => {
     const component = fixture.componentInstance;
 
     component.ngOnInit();
-    fixture.whenStable();
     tick();
     assert.deepEqual(component.hero, { id: 16, name: 'RubberMan' });
     fixture.detectChanges();
     component.ngAfterViewInit();
-    fixture.whenStable();
     tick();
     fixture.detectChanges();
 
