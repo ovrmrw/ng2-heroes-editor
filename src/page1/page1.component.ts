@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Page1Service } from './page1.service';
@@ -24,7 +25,22 @@ import { Hero } from '../types';
       <button class="btn btn-outline-primary" (click)="addHero()">Add Hero</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[@routeAnimation]': 'true',
+    '[style.display]': "'block'",
+    '[style.position]': "'absolute'"
+  },
+  animations: [
+    trigger('routeAnimation', [
+      state('*', style({ transform: 'translateX(0)', opacity: 1 })),
+      transition('void => *', [
+        style({ transform: 'translateX(-20%)', opacity: 0 }),
+        animate(100)
+      ]),
+      transition('* => void', animate(100, style({ transform: 'translateX(20%)', opacity: 0 })))
+    ])
+  ]
 })
 export class Page1Component implements OnInit {
 

@@ -14,7 +14,7 @@ import { Page2Service } from '../page2/page2.service';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, routing],
-  declarations: [AppComponent, Page1Component, Page2Component],
+  declarations: [Page1Component, Page2Component, AppComponent],
   providers: [Dispatcher, Store, Page1Service, Page2Service],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import lodash from 'lodash';
@@ -41,14 +42,26 @@ import { Hero } from '../types';
   // `,
   templateUrl: 'page2.template.html',
   styleUrls: ['page2.style.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[@routeAnimation]': 'true',
+    '[style.display]': "'block'",
+    '[style.position]': "'absolute'"
+  },
+  animations: [
+    trigger('routeAnimation', [
+      state('*', style({ transform: 'translateX(0)', opacity: 1 })),
+      transition('void => *', [
+        style({ transform: 'translateX(-20%)', opacity: 0 }),
+        animate(100)
+      ]),
+      transition('* => void', animate(100, style({ transform: 'translateX(20%)', opacity: 0 })))
+    ])
+  ]
 })
 export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
   hero: Hero;
   isAdding: boolean = false;
-  // private _disSubs: Subscription[] = []; // disposable subscriptions
-  // set disSub(sub: Subscription) { this._disSubs.push(sub); }
-  // get disSubs() { return this._disSubs; }
 
   constructor(
     public service: Page2Service,
@@ -56,29 +69,7 @@ export class Page2Component implements OnInit, OnDestroy, AfterViewInit {
     public router: Router,
     public cd: ChangeDetectorRef,
     public el: ElementRef
-  ) {
-    // this.disSub = this.route.params.subscribe(params => {
-    //   if (params['id']) { // Editing Mode
-    //     const id: number = +params['id'];
-    //     this.service.heroes$.take(1).toPromise().then(heroes => {
-    //       const selectedHero: Hero | undefined = heroes.find(hero => hero.id === id);
-    //       if (selectedHero) {
-    //         this.hero = selectedHero;
-    //       } else {
-    //         alert('no hero for the explicit id.');
-    //         this.router.navigate(['/page1']);
-    //       }
-    //     });
-    //   } else { // Adding Mode
-    //     this.service.heroes$.take(1).toPromise().then(heroes => {
-    //       const newId: number = heroes.length > 0 ? lodash.maxBy(heroes, 'id').id + 1 : 1;
-    //       this.hero = new Hero();
-    //       this.hero.id = newId;
-    //       this.isAdding = true;
-    //     });
-    //   }
-    // });
-  }
+  ) { }
 
   ngOnInit() {
     this.route.params.forEach(async (params: Params) => {
