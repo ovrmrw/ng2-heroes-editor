@@ -28,5 +28,6 @@ import {
 // setBaseTestProviders(TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS, TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
 TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
+
 import '../src-specs/specs.ref'; // テストしたいTSファイル
 /* <<< boilerplate */

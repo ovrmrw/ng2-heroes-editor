@@ -1,19 +1,20 @@
 /* >>> boilerplate */
 import assert from 'power-assert';
 import lodash from 'lodash';
-import { inject, async, fakeAsync, tick, addProviders, TestComponentBuilder, ComponentFixture } from '@angular/core/testing';
-import { asyncPower, fakeAsyncPower, setTimeoutPromise, elements, elementText, elementValue } from '../../test-ng2/testing.helper';
+import { inject, async, fakeAsync, tick, TestBed, ComponentFixture } from '@angular/core/testing';
+import { asyncPower, setTimeoutPromise, elements, elementText, elementValue } from '../../test-ng2/testing.helper';
 /* <<< boilerplate */
 
 
 ////////////////////////////////////////////////////////////////////////
 // modules
 import { Page2Component } from '../../src/page2/page2.component';
-import { Store, Dispatcher, Action } from '../../src/store';
+import { Page2Service } from '../../src/page2/page2.service';
+import { Store, Dispatcher } from '../../src/store';
 import { Hero } from '../../src/types';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { disableDeprecatedForms, provideForms } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 
 
@@ -48,43 +49,64 @@ class Mock { }
 // tests
 describe('TEST: HeroDetail Component', () => {
   /* >>> boilerplate */
-  let builder: TestComponentBuilder;
-
   beforeEach(() => {
-    addProviders([
-      disableDeprecatedForms(),
-      provideForms(),
-      { provide: Dispatcher, useValue: new Dispatcher<Action>() },
-      { provide: Store, useClass: MockStore },
-      { provide: ActivatedRoute, useClass: MockActivatedRoute },
-      { provide: Router, useClass: Mock }
-    ]);
+    TestBed.configureTestingModule({
+      imports: [FormsModule],
+      declarations: [Page2Component],
+      providers: [
+        Dispatcher,
+        { provide: Store, useClass: MockStore },
+        Page2Service,
+        { provide: ActivatedRoute, useClass: MockActivatedRoute },
+        { provide: Router, useClass: Mock }
+      ]
+    });
   });
-
-  beforeEach(inject([TestComponentBuilder], (tcb) => {
-    builder = tcb;
-  }));
   /* <<< boilerplate */
 
 
-  it('can create, should have a selected hero', fakeAsyncPower(() => {
-    const fixture = builder.createFakeAsync(Page2Component);
-    tick();
+  it('can create, should have a selected hero', asyncPower(async () => {
+    await TestBed.compileComponents();
+    const fixture = TestBed.createComponent(Page2Component);
     assert(!!fixture);
-    if (fixture) {
-      const el = fixture.nativeElement as HTMLElement;
-      const component = fixture.componentRef.instance;
-      assert(elementText(el, 'h3') === '');
-      component.ngOnInit();
-      tick();
-      assert.deepEqual(component.hero, { id: 16, name: 'RubberMan' });
-      fixture.detectChanges();
-      assert(elementText(el, 'h3') === 'Editing Mode');
-      tick();
-      fixture.detectChanges();
-      assert(elementValue(el, 'input#id') === '16');
-      assert(elementValue(el, 'input#name') === 'RubberMan');
-    }
+    const el = fixture.debugElement.nativeElement as HTMLElement;
+    const component = fixture.componentInstance;
+
+    component.ngOnInit();
+    await fixture.whenStable();
+    assert.deepEqual(component.hero, { id: 16, name: 'RubberMan' });
+    fixture.detectChanges();
+    component.ngAfterViewInit();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    assert(elementText(el, 'h3') === 'Editing Mode');
+    assert(elementValue(el, 'input') === '16');
+    assert(elementValue(el, 'input#name') === 'RubberMan');
+  }));
+
+
+  it('can create, should have a selected hero (fakeAsync ver.)', fakeAsync(() => {
+    TestBed.compileComponents();
+    tick();
+    const fixture = TestBed.createComponent(Page2Component);
+    assert(!!fixture);
+    const el = fixture.debugElement.nativeElement as HTMLElement;
+    const component = fixture.componentInstance;
+
+    component.ngOnInit();
+    fixture.whenStable();
+    tick();
+    assert.deepEqual(component.hero, { id: 16, name: 'RubberMan' });
+    fixture.detectChanges();
+    component.ngAfterViewInit();
+    fixture.whenStable();
+    tick();
+    fixture.detectChanges();
+
+    assert(elementText(el, 'h3') === 'Editing Mode');
+    assert(elementValue(el, 'input') === '16');
+    assert(elementValue(el, 'input#name') === 'RubberMan');
   }));
 
 });

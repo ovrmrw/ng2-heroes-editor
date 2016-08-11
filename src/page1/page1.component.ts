@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Page1Service } from './page1.service';
@@ -23,7 +23,8 @@ import { Hero } from '../types';
     <div>
       <button class="btn btn-outline-primary" (click)="addHero()">Add Hero</button>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Page1Component implements OnInit {
 
