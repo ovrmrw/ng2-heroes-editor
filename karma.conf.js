@@ -11,12 +11,12 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha'], // jasmine / mocha
+    frameworks: ['jasmine'], // jasmine / mocha
 
 
     // list of files / patterns to load in the browser
     files: [
-      './node_modules/core-js/client/shim.js',
+      // './node_modules/core-js/client/shim.js',
       './node_modules/babel-polyfill/dist/polyfill.js',
 
       './.dest-test-ng2/webpack.bundle.spec.vendor.js',
