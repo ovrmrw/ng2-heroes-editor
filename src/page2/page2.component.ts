@@ -43,6 +43,10 @@ export class Page2Component implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
+    /*
+      Observable.forEach()は公式チュートリアルで使われている書き方ではあるが、
+      メモリーリークの原因となるので非推奨。
+    */
     this.route.params.forEach(async (params: Params) => {
       const heroes: Hero[] = await this.service.heroes$.first().toPromise();
       if (params['id']) { // Editing Mode
